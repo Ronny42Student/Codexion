@@ -48,3 +48,21 @@ MANDATORY:
 - chaque coder possede un nombre compris entre 1 et nb_coders (1 =< nb_coders)
 - le "coder 1" est assis au cote du "coder nb_coders"
 - tout autre "coder N" est assis entre "coder N-1" et "coder N+1"
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+-> chaque developpeur represente par un thread:    pthread_create
+-> il y a un dongle entre chaque paire de developpeurs, chacun dispose d'un dongle sur sa gauche et d'un dongle sur sa droite
+
+ex:
+    (dongle1)  coder1 (dongle2) coder2 (dongle3)
+               ------           ------
+    
+    => (dongle2) est entre le coder1 et le coder2.
+
+-> S'il n'y a qu'un seul coder , il ne doit y avoir qu'une seule dongle
+
+-> Afin d'eviter "la duplication" des dongles, on protege chaque dongle a l'aide d'un mutex (verouillage):
+    - pthread_mutex_t
+    - pthread_cond_t
+
+-> Un temps de refroidissement pour les dongles (cooldown) est obligatoire
