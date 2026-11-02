@@ -28,3 +28,19 @@ NB:
        - les coders ne communiquent pas entre eux
        - Les coders ignorent si l'un de leurs collegues est sur le point de faire un "burn-out"
        - Inutile de preciser que les coders doivent tout faire pour eviter l'epuisement
+---------------------------------------------------------------------------------------------------------------------------------------------------
+MANDATORY:
+* VARIABLES GLOBALES INTERDITES
+
+./codexion "nb_coders" "time_to_burnout" "time_to_compile" "time_to_debug" "time_to_refactor" "nb_compiles_required" "dongle_cooldown" "scheduler"
+
+- nb_coders: nombre de developpeurs, correspondant au nombres de cles (dongles)
+- time_to_burnout (en millisecondes): Si un developpeur ne commence pas la compilation dans cet delais , il subit un "burnout"
+- time_to_compile (en millisecondes): duree necessaire a un developpeur pour faire une compilation, il doit verouiller les deux cles (dongles)
+- time_to_debug (en millisecondes): duree consacrer au debogage
+- time_to_refactor (en millisecondes): duree consacrer au refactoring, apres cela le coder doit obtenir des cles pour une nouvelle compilation
+- nb_compiles_required: La simulation s'arrete si les developpeurs ont fait ces nombres de compilations, sinon elle s'arrete a un "burnout"
+- dongle_cooldown (en millisecondes): Une fois liberee, une cle devient indisponible pendant la duree de son temps de refroidissement (cooldown)
+- scheduler:
+    - FIFO (first-In / first-Out): premier arrive, premier servi
+    - edf (Earlest Deadline First): L'echeance la plus proche en premier (last_compile_start + time_to_burnout)
