@@ -46,3 +46,5 @@ MANDATORY:
     - edf (Earlest Deadline First): L'echeance la plus proche en premier (last_compile_start + time_to_burnout)
 
 - chaque coder possede un nombre compris entre 1 et nb_coders (1 =< nb_coders)
+- le "coder 1" est assis au cote du "coder nb_coders"
+- tout autre "coder N" est assis entre "coder N-1" et "coder N+1"
