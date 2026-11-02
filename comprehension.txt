@@ -1,0 +1,30 @@
+- Soient des "developpeurs (coders)" dans un espace de travail collaboratif circulaire et inclusif
+- Au centre se trouve un compilateur quanique partage (Quantum Compiler)
+
+- Par tours ils effectuent des operations (3 cas):
+    - compilation (compile)
+    - debogage (debug)
+    - refactorisation (refactor)
+
+quand ils fait un (3 cas):
+    - compilation: pas de debogage, pas de refactorisation
+    - debogage: pas de compilation, pas de refactorisation
+    - refactorisation: pas de compilation, pas de debogage
+
+- Plusieurs cle USB (dongles) --> beaucoup plus que les coders
+
+-> la compilation necessite l'utilisation de deux cles USB (coder action):
+    - L'un a gauche (mutex A)    - verouillage
+    - L'autre a droite (mutex B) - verouillage
+
+-> apres la compilation, le coder repose les mutex sur la table
+-> apres il a le debogage et la refactorisation
+
+NB:
+    1/  - La simulation s'arrete si un coder fait un "burn-out" (epuisement professionnel)
+        - faute d'avoir pu compiler
+
+    2/ - chaque coder doit compiler regulierement afin d'eviter tout risque d'epuisement
+       - les coders ne communiquent pas entre eux
+       - Les coders ignorent si l'un de leurs collegues est sur le point de faire un "burn-out"
+       - Inutile de preciser que les coders doivent tout faire pour eviter l'epuisement
