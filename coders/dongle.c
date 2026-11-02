@@ -5,12 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/02 16:23:16 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 16:23:18 by nrajaoar         ###   ########.fr       */
+/*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
+/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
+
+static int	init_one_dongle(t_dongle *d, int id, int capacity)
+{
+	d->id = id;
+	d->owner = -1;
+	d->cooldown_until = 0;
+	if (pthread_mutex_init(&d->mutex, NULL) != 0)
+		return (0);
+	if (pthread_cond_init(&d->cond, NULL) != 0)
+	{
+		pthread_mutex_destroy(&d->mutex);
+		return (0);
+	}
+	if (!pq_init(&d->pq, capacity))
+	{
+		pthread_cond_destroy(&d->cond);
+		pthread_mutex_destroy(&d->mutex);
+		return (0);
+	}
+	return (1);
+}
 
 int	init_dongles(t_env *env)
 {
@@ -22,15 +43,12 @@ int	init_dongles(t_env *env)
 	i = 0;
 	while (i < env->nb_coders)
 	{
-		env->dongles[i].id = i;
-		env->dongles[i].owner = -1;
-		env->dongles[i].cooldown_until = 0;
-		if (pthread_mutex_init(&env->dongles[i].mutex, NULL) != 0)
+		if (!init_one_dongle(&env->dongles[i], i, env->nb_coders))
+		{
+			destroy_dongles(env);
 			return (0);
-		if (pthread_cond_init(&env->dongles[i].cond, NULL) != 0)
-			return (0);
-		if (!pq_init(&env->dongles[i].pq, env->nb_coders))
-			return (0);
+		}
+		env->nb_dongles++;
 		i++;
 	}
 	return (1);
@@ -43,7 +61,7 @@ void	destroy_dongles(t_env *env)
 	if (!env->dongles)
 		return ;
 	i = 0;
-	while (i < env->nb_coders)
+	while (i < env->nb_dongles)
 	{
 		pthread_mutex_destroy(&env->dongles[i].mutex);
 		pthread_cond_destroy(&env->dongles[i].cond);
@@ -52,55 +70,7 @@ void	destroy_dongles(t_env *env)
 	}
 	free(env->dongles);
 	env->dongles = NULL;
-}
-
-static void	build_timespec(long long abs_ms, struct timespec *ts)
-{
-	ts->tv_sec = abs_ms / 1000;
-	ts->tv_nsec = (abs_ms % 1000) * 1000000;
-}
-
-int	take_dongle(t_env *env, t_coder *coder, int dongle_idx)
-{
-	t_dongle		*d;
-	t_req			req;
-	struct timespec	ts;
-
-	d = &env->dongles[dongle_idx];
-	pthread_mutex_lock(&d->mutex);
-	req.coder_id = coder->id;
-	req.deadline = coder->last_compile_start + env->time_to_burnout;
-	pthread_mutex_lock(&env->state_mutex);
-	req.req_seq = ++env->seq_counter;
-	pthread_mutex_unlock(&env->state_mutex);
-	pq_push(&d->pq, req, env->is_edf);
-	while (1)
-	{
-		pthread_mutex_lock(&env->state_mutex);
-		if (env->is_over)
-		{
-			pthread_mutex_unlock(&env->state_mutex);
-			pq_remove(&d->pq, coder->id, env->is_edf);
-			pthread_mutex_unlock(&d->mutex);
-			return (0);
-		}
-		pthread_mutex_unlock(&env->state_mutex);
-		if (d->owner == -1 && pq_peek_coder(&d->pq) == coder->id)
-		{
-			if (get_time_ms() >= d->cooldown_until)
-			{
-				d->owner = coder->id;
-				pq_pop(&d->pq, env->is_edf);
-				pthread_mutex_unlock(&d->mutex);
-				print_status(env, coder->id, "has taken a dongle");
-				return (1);
-			}
-			build_timespec(d->cooldown_until, &ts);
-			pthread_cond_timedwait(&d->cond, &d->mutex, &ts);
-		}
-		else
-			pthread_cond_wait(&d->cond, &d->mutex);
-	}
+	env->nb_dongles = 0;
 }
 
 void	release_dongle(t_env *env, int dongle_idx)

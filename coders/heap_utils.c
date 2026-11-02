@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/02 16:23:21 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 16:23:22 by nrajaoar         ###   ########.fr       */
+/*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
+/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,24 @@ int	pq_peek_coder(t_pq *pq)
 	return (pq->heap[0].coder_id);
 }
 
-static void	sift_down(t_pq *pq, int i, int is_edf)
+void	sift_up(t_pq *pq, int i, int is_edf)
+{
+	int		parent;
+	t_req	tmp;
+
+	while (i > 0)
+	{
+		parent = (i - 1) / 2;
+		if (!is_higher(pq->heap[i], pq->heap[parent], is_edf))
+			break ;
+		tmp = pq->heap[i];
+		pq->heap[i] = pq->heap[parent];
+		pq->heap[parent] = tmp;
+		i = parent;
+	}
+}
+
+void	sift_down(t_pq *pq, int i, int is_edf)
 {
 	int		l;
 	int		r;
@@ -35,15 +52,12 @@ static void	sift_down(t_pq *pq, int i, int is_edf)
 			s = l;
 		if (r < pq->size && is_higher(pq->heap[r], pq->heap[s], is_edf))
 			s = r;
-		if (s != i)
-		{
-			tmp = pq->heap[i];
-			pq->heap[i] = pq->heap[s];
-			pq->heap[s] = tmp;
-			i = s;
-		}
-		else
+		if (s == i)
 			break ;
+		tmp = pq->heap[i];
+		pq->heap[i] = pq->heap[s];
+		pq->heap[s] = tmp;
+		i = s;
 	}
 }
 
@@ -57,8 +71,12 @@ void	pq_remove(t_pq *pq, int coder_id, int is_edf)
 		if (pq->heap[i].coder_id == coder_id)
 		{
 			pq->size--;
-			pq->heap[i] = pq->heap[pq->size];
-			sift_down(pq, i, is_edf);
+			if (i < pq->size)
+			{
+				pq->heap[i] = pq->heap[pq->size];
+				sift_up(pq, i, is_edf);
+				sift_down(pq, i, is_edf);
+			}
 			return ;
 		}
 		i++;

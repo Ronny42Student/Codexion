@@ -6,7 +6,7 @@
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 16:23:47 by nrajaoar         ###   ########.fr       */
+/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,6 @@ void	ft_usleep(long long ms, t_env *env)
 	long long	start;
 
 	start = get_time_ms();
-	while (1)
-	{
-		pthread_mutex_lock(&env->state_mutex);
-		if (env->is_over)
-		{
-			pthread_mutex_unlock(&env->state_mutex);
-			break ;
-		}
-		pthread_mutex_unlock(&env->state_mutex);
-		if (get_time_ms() - start >= ms)
-			break ;
+	while (!simulation_over(env) && get_time_ms() - start < ms)
 		usleep(500);
-	}
 }

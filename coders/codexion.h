@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/02 16:22:55 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 16:22:59 by nrajaoar         ###   ########.fr       */
+/*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
+/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_coder
 	int				id;
 	int				left_dongle;
 	int				right_dongle;
+	int				first_dongle;
+	int				second_dongle;
 	long long		last_compile_start;
 	int				compiles_count;
 	pthread_t		thread;
@@ -68,6 +70,9 @@ typedef struct s_env
 	long long		start_time;
 	int				is_over;
 	long long		seq_counter;
+	int				nb_dongles;
+	int				nb_started;
+	int				monitor_started;
 	pthread_mutex_t	log_mutex;
 	pthread_mutex_t	state_mutex;
 	t_dongle		*dongles;
@@ -87,6 +92,8 @@ t_req		pq_pop(t_pq *pq, int is_edf);
 int			pq_peek_coder(t_pq *pq);
 void		pq_remove(t_pq *pq, int coder_id, int is_edf);
 int			is_higher(t_req a, t_req b, int is_edf);
+void		sift_up(t_pq *pq, int i, int is_edf);
+void		sift_down(t_pq *pq, int i, int is_edf);
 
 int			init_dongles(t_env *env);
 void		destroy_dongles(t_env *env);
@@ -96,8 +103,12 @@ void		release_dongle(t_env *env, int dongle_idx);
 int			start_simulation(t_env *env);
 void		*coder_routine(void *arg);
 void		*monitor_routine(void *arg);
+void		cleanup_env(t_env *env);
+
+int			simulation_over(t_env *env);
+void		wake_all(t_env *env);
+void		stop_simulation(t_env *env);
 void		print_status(t_env *env, int id, const char *status);
 void		print_burnout(t_env *env, int id);
-void		cleanup_env(t_env *env);
 
 #endif

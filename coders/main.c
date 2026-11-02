@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/02 16:23:29 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 16:23:30 by nrajaoar         ###   ########.fr       */
+/*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
+/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char **argv)
 	if (!parse_args(argc, argv, &env))
 	{
 		write(2, "Error: Invalid arguments\n", 25);
+		cleanup_env(&env);
 		return (1);
 	}
 	if (!init_dongles(&env))
