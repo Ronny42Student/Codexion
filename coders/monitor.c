@@ -6,7 +6,7 @@
 /*   By: nrajaoar <nrajaoar@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/02 16:23:46 by nrajaoar          #+#    #+#             */
-/*   Updated: 2026/11/02 18:00:00 by nrajaoar         ###   ########.fr       */
+/*   Updated: 2026/11/07 09:41:54 by nrajaoar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	*monitor_routine(void *arg)
 			print_burnout(env, res);
 		if (res != 0)
 			break ;
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }
