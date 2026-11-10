@@ -101,6 +101,8 @@ int			init_dongles(t_env *env);
 void		destroy_dongles(t_env *env);
 int			take_dongle(t_env *env, t_coder *coder, int dongle_idx);
 void		release_dongle(t_env *env, int dongle_idx);
+int			take_pair(t_env *env, t_coder *c);
+int			try_pair(t_env *env, t_coder *c, t_dongle *lo, t_dongle *hi);
 
 int			start_simulation(t_env *env);
 void		*coder_routine(void *arg);

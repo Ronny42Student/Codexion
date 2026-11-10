@@ -14,6 +14,8 @@
 
 static int	take_both(t_env *env, t_coder *coder)
 {
+	if (coder->first_dongle != coder->second_dongle)
+		return (take_pair(env, coder));
 	if (!take_dongle(env, coder, coder->first_dongle))
 		return (0);
 	if (!take_dongle(env, coder, coder->second_dongle))

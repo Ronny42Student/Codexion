@@ -79,7 +79,9 @@ void	release_dongle(t_env *env, int dongle_idx)
 
 	d = &env->dongles[dongle_idx];
 	pthread_mutex_lock(&d->mutex);
+	pthread_mutex_lock(&env->state_mutex);
 	d->owner = -1;
+	pthread_mutex_unlock(&env->state_mutex);
 	d->cooldown_until = get_time_ms() + env->dongle_cooldown;
 	pthread_cond_broadcast(&d->cond);
 	pthread_mutex_unlock(&d->mutex);
