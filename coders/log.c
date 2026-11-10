@@ -40,6 +40,7 @@ void	stop_simulation(t_env *env)
 {
 	pthread_mutex_lock(&env->state_mutex);
 	env->is_over = 1;
+	env->aborted = 1;
 	pthread_mutex_unlock(&env->state_mutex);
 	wake_all(env);
 }
@@ -70,6 +71,7 @@ void	print_burnout(t_env *env, int id)
 	if (!env->is_over)
 	{
 		env->is_over = 1;
+		env->aborted = 1;
 		first = 1;
 		now = get_time_ms() - env->start_time;
 		printf("%lld %d burned out\n", now, id);

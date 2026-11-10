@@ -69,6 +69,7 @@ typedef struct s_env
 	int				is_edf;
 	long long		start_time;
 	int				is_over;
+	int				aborted;
 	long long		seq_counter;
 	int				nb_dongles;
 	int				nb_started;
@@ -82,6 +83,7 @@ typedef struct s_env
 
 long long	get_time_ms(void);
 void		ft_usleep(long long ms, t_env *env);
+void		compile_sleep(long long ms, t_env *env);
 
 int			parse_args(int argc, char **argv, t_env *env);
 

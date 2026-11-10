@@ -28,3 +28,22 @@ void	ft_usleep(long long ms, t_env *env)
 	while (!simulation_over(env) && get_time_ms() - start < ms)
 		usleep(500);
 }
+
+static int	is_aborted(t_env *env)
+{
+	int	aborted;
+
+	pthread_mutex_lock(&env->state_mutex);
+	aborted = env->aborted;
+	pthread_mutex_unlock(&env->state_mutex);
+	return (aborted);
+}
+
+void	compile_sleep(long long ms, t_env *env)
+{
+	long long	start;
+
+	start = get_time_ms();
+	while (!is_aborted(env) && get_time_ms() - start < ms)
+		usleep(500);
+}
