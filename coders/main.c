@@ -32,11 +32,13 @@ int	main(int argc, char **argv)
 	}
 	if (!init_dongles(&env))
 	{
+		write(2, "Error: Initialization failed\n", 29);
 		cleanup_env(&env);
 		return (1);
 	}
 	if (!start_simulation(&env))
 	{
+		write(2, "Error: Simulation failed\n", 25);
 		cleanup_env(&env);
 		return (1);
 	}
