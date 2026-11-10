@@ -43,7 +43,7 @@ int	init_dongles(t_env *env)
 	i = 0;
 	while (i < env->nb_coders)
 	{
-		if (!init_one_dongle(&env->dongles[i], i, env->nb_coders))
+		if (!init_one_dongle(&env->dongles[i], i, 2))
 		{
 			destroy_dongles(env);
 			return (0);
